@@ -75,7 +75,7 @@ Als erstes wird mit `uv run ./init_db.py` die Datenbank initiert.
 
 Anschließend mit `uv run ./mcp_server.py` den MCP-Server starten.  
 
-Zusätzlich mit `uv run ./frontend/manage.py 8080` das Frontend auf Port 8080 starten. Dieses ist unter <http://localhost:8080> erreichbar.
+Zusätzlich mit `uv run ./frontend/manage.py runserver 8080` das Frontend auf Port 8080 starten. Dieses ist unter <http://localhost:8080> erreichbar.
 
 ## Evaluierung
 
