@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="de">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Anfragen</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+        <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+        <style>
+
+:root {
+    --sidebar-width: 280px;
+    --sidebar-width-collapsed: 80px;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+.sidebar {
+    width: var(--sidebar-width);
+    height: 100vh;
+    background: linear-gradient(135deg, #1a1c2e 0%, #16181f 100%);
+    transition: all 0.3s ease;
+    overflow: visible;
+}
+
+.sidebar.collapsed {
+    width: var(--sidebar-width-collapsed);
+}
+
+.sidebar-link {
+    color: #a0a3bd;
+    transition: all 0.2s ease;
+    border-radius: 8px;
+    margin: 4px 16px;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.sidebar-link:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateX(5px);
+}
+
+.sidebar-link.active {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.logo-text {
+    background: #4e73f4;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    transition: opacity 0.3s ease;
+}
+
+.logo-text-small {
+    color: #00366b;
+}
+
+.collapsed~.main-content {
+    margin-left: var(--sidebar-width-collapsed);
+}
+
+.toggle-btn {
+    position: absolute;
+    right: -15px;
+    top: 20px;
+    background: white;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    border: none;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.collapsed .toggle-btn {
+    transform: rotate(180deg);
+}
+
+.collapsed .hide-on-collapse {
+    opacity: 0;
+    visibility: hidden;
+}
+
+.collapsed .logo-text {
+    opacity: 0;
+}
+
+.collapsed .sidebar-link {
+    padding: 1rem !important;
+    margin: 4px 8px;
+}
+
+.collapsed .sidebar-link i {
+    margin: 0 !important;
+}
+
+.nav {
+    overflow: hidden;
+}
+
+.card-sleek {
+    background: linear-gradient(135deg, #00366b, #002447);
+    color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+.card-sleek .card-body {
+    padding: 2rem;
+}
+.card-sleek .card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+.main-content {
+    margin-left: var(--sidebar-width);
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+        </style>
+    </head>
+    <body onload="check_login();">
+        <nav class="sidebar d-flex flex-column flex-shrink-0 position-fixed">
+            <button class="toggle-btn" onclick="toggle_sidebar()">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <div class="p-4">
+                <h4 class="logo-text fw-bold mb-0">VON POLL</h4>
+                <p class="logo-text-small small hide-on-collapse">Dashboard</p>
+            </div>
+
+            <div class="nav flex-column">
+                <a href="/" class="sidebar-link text-decoration-none p-3">
+                    <i class="fas fa-home me-3"></i>
+                    <span class="hide-on-collapse">Anfragen</span>
+                </a>
+                <a href="/dash" class="sidebar-link active text-decoration-none p-3">
+                    <i class="fas fa-table me-3"></i>
+                    <span class="hide-on-collapse">Dashboard</span>
+                </a>
+                <a href="/event" class="sidebar-link text-decoration-none p-3">
+                    <i class="fas fa-calendar me-3"></i>
+                    <span class="hide-on-collapse">Termine</span>
+                </a>
+
+                <a href="/note" class="sidebar-link text-decoration-none p-3">
+                    <i class="fas fa-note-sticky me-3"></i>
+                    <span class="hide-on-collapse">Notizen</span>
+                </a>
+
+                <a href="/login?signout=true" class="sidebar-link text-decoration-none p-3">
+                    <i class="fas fa-right-from-bracket me-3"></i>
+                    <span class="hide-on-collapse">Logout</span>
+                </a>
+            </div>
+
+        </nav>
+
+        <div class="main-content">
+            <div class="card card-sleek">
+                <div class="card-body">
+                    <h5 class="card-title">Immobilien</h5>
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-light">
+                            <tr class="sticky-top">
+                            <th>Straße</th>
+                            <th>Hausnummer</th>
+                            <th>PLZ</th>
+                            <th>Ort</th>
+                            <th>Land</th>
+                            <th>Baujahr</th>
+                            <th>Zustand</th>
+                            <th>Zimmer</th>
+                            <th>Wohnfläche</th>
+                            <th>Art</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for prop in properties %}
+                            <tr>
+                            <td>{{ prop.straße }}</td>
+                            <td>{{ prop.hausnummer }}</td>
+                            <td>{{ prop.plz }}</td>
+                            <td>{{ prop.ort }}</td>
+                            <td>{{ prop.land }}</td>
+                            <td>{{ prop.baujahr }}</td>
+                            <td>{{ prop.zustand }}</td>
+                            <td>{{ prop.zimmer }}</td>
+                            <td>{{ prop.wohnfläche }}</td>
+                            <td>{{ prop.art }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                </div>
+            </div>
+            <br>
+            <div class="card card-sleek">
+                <div class="card-body">
+                    <h5 class="card-title">Makler</h5>
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-light">
+                            <tr class="sticky-top">
+                            <th>Vorname</th>
+                            <th>Nachname</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for real in realtor %}
+                            <tr>
+                            <td>{{ real.vorname }}</td>
+                            <td>{{ real.nachname }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                </div>
+            </div>
+            <br>
+            <div class="card card-sleek">
+                <div class="card-body">
+                    <h5 class="card-title">Suchkunden</h5>
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-light">
+                            <tr class="sticky-top">
+                            <th>Vorname</th>
+                            <th>Nachname</th>
+                            <th>Budget</th>
+                            <th>Art</th>
+                            <th>Ort</th>
+                            <th>Min Zimmer</th>
+                            <th>Max Zimmer</th>
+                            <th>Min Fläche</th>
+                            <th>Max Fläche</th>
+                            <th>Zustand</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for buy in buyer %}
+                            <tr>
+                            <td>{{ buy.vorname }}</td>
+                            <td>{{ buy.nachname }}</td>
+                            <td>{{ buy.budget }}</td>
+                            <td>{{ buy.art }}</td>
+                            <td>{{ buy.ort }}</td>
+                            <td>{{ buy.zimmerMin }}</td>
+                            <td>{{ buy.zimmerMax }}</td>
+                            <td>{{ buy.wohnflächeMin }}</td>
+                            <td>{{ buy.wohnflächeMax }}</td>
+                            <td>{{ buy.zustand }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                </div>
+            </div>
+            <br>
+            <div class="card card-sleek">
+                <div class="card-body">
+                    <h5 class="card-title">Eigentümer</h5>
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-light">
+                            <tr class="sticky-top">
+                            <th>Vorname</th>
+                            <th>Nachname</th>
+                            <th>Geburtsdatum</th>
+                            <th>E-Mail</th>
+                            <th>Telefonnummer</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for own in owner %}
+                            <tr>
+                            <td>{{ own.vorname }}</td>
+                            <td>{{ own.nachname }}</td>
+                            <td>{{ own.geburtsdatum }}</td>
+                            <td>{{ own.email }}</td>
+                            <td>{{ own.telefonnummer }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        </table>
+                </div>
+            </div>
+        </div>
+
+
+    
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
+        <script>
+function toggle_sidebar() {
+    const sidebar = document.querySelector('.sidebar');
+    sidebar.classList.toggle('collapsed');
+}
+function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) {
+        return parts.pop().split(';').shift();
+    } else {
+        return false;
+    }
+
+}
+function check_login() {
+    const name = getCookie("name")
+    if (!name) {
+        window.location.href = "/login/";
+    }
+}
+        </script>
+    </body>
+</html>
+

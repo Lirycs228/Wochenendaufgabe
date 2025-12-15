@@ -1,0 +1,467 @@
+{
+  "name": "Orchestrate",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.4,
+      "position": [
+        -224,
+        -128
+      ],
+      "id": "0a35d320-5f1e-4eb4-998e-ffdaa5964d1a",
+      "name": "When chat message received",
+      "webhookId": "ce94f3d9-7a33-4161-ba9f-c7152095882c"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.chatInput }}",
+        "options": {
+          "systemMessage": "Du bist ein Orchestrierungs-Agent. Du hast mehrere spezialisierte Agenten zur Verfügung, die jeweils verscheidene Themenbereiche behandeln.\n\ndeine Aufgbe ist es, die Nutzeranfragen an den jeweils passenden Agenten weiterzuleiten. Es kann sein, dass mehrere Themen pro Anfrage kommen. In solchen Fälle seperierst du die Anfrage und lässt jeden Agenten sein Thema bearbeiten. Mische niemals Themen. Du selber bearbeitest keine Anfragen und gibst auch keine eigenen Antworten. leite nur die Anfrage weiter und gebe die Antwort des Agenten zurück."
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        416,
+        0
+      ],
+      "id": "0a3c91b2-3964-4f24-9957-27542f6752df",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "o4-mini",
+          "mode": "list",
+          "cachedResultName": "o4-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        288,
+        208
+      ],
+      "id": "70ddc3d0-80bb-45c9-a564-350d1d93a6b2",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "YZOe1waidn1SL6WV",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        432,
+        208
+      ],
+      "id": "9e297702-91db-41ba-98ba-48886d74f124",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "description": "Nutze diesen Agenten für alle Aufgaben im bereich des Kundenmanagements. Hier geht es um das anlegen, suchen oder löschen von Eigentümern (Owner) und Suchkunden, Käufern (Buyer). Zusätzlich übernimmt dieser Agent das löschen, ändern oder speichern von Suchkriterien der Suchkunden.",
+        "workflowId": {
+          "__rl": true,
+          "value": "oS7gpkxVBJbe2isQ",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/oS7gpkxVBJbe2isQ",
+          "cachedResultName": "Kundenmanagement"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('query', ``, 'string') }}",
+            "sessionId": "={{ $json.sessionId }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "sessionId",
+              "displayName": "sessionId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        752,
+        112
+      ],
+      "id": "059f67c8-a442-474c-b871-62f3264ab782",
+      "name": "Kundenmanagement"
+    },
+    {
+      "parameters": {
+        "description": "Nutze diesen Agenten um alle Aufgaben im Bereich des Immobilienmanagements zu bearbeiten. Hier geht es um das löschen, ändern und anlegen von Immobilien.",
+        "workflowId": {
+          "__rl": true,
+          "value": "2izJhQaFqHzjJqub",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/2izJhQaFqHzjJqub",
+          "cachedResultName": "Immobilienmanagement"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('query', ``, 'string') }}",
+            "sessionId": "={{ $json.sessionId }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            },
+            {
+              "id": "sessionId",
+              "displayName": "sessionId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string"
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        752,
+        256
+      ],
+      "id": "3317badf-7b21-427c-a459-827d2f66eb79",
+      "name": "Immobilienmanagement"
+    },
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "fd2f6a34-2a8f-4580-b53f-d24102e01d4f",
+        "responseMode": "responseNode",
+        "options": {
+          "allowedOrigins": "*",
+          "rawBody": true
+        }
+      },
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2.1,
+      "position": [
+        -240,
+        64
+      ],
+      "id": "129d2ddd-3a23-477f-9b63-4efb12c13146",
+      "name": "Webhook",
+      "webhookId": "fd2f6a34-2a8f-4580-b53f-d24102e01d4f"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "4af5ffe9-7e02-4530-a39d-70339b67b5ed",
+              "name": "chatInput",
+              "value": "={{ $json.body.query }}",
+              "type": "string"
+            },
+            {
+              "id": "19f27e86-bb17-4aea-a13b-455978ed1606",
+              "name": "sessionId",
+              "value": "={{ $json.body.sessionId }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -32,
+        64
+      ],
+      "id": "da5bb585-ce86-4408-8e3d-0be367f99ed8",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "description": "Nutze diesen Agenten um alle Aufgaben im Bereich der Notizen und Interaktionen zu bearbeiten. Hier geht es um das löschen, ändern und anlegen von Notizen zu Kunden und dem anlegen, ändern und löschen von Interaktionshistorien zwischen Maklern und Suchkunden/Käufern.",
+        "workflowId": {
+          "__rl": true,
+          "value": "ouKlgfT8JEdQdGJd",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/ouKlgfT8JEdQdGJd",
+          "cachedResultName": "Notizen und Historie"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('query', ``, 'string') }}",
+            "sessionId": "={{ $json.sessionId }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "sessionId",
+              "displayName": "sessionId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        752,
+        416
+      ],
+      "id": "f69c8f8f-b8bd-4a0a-b7d6-b5d66a980003",
+      "name": "Notizen und Interaktionshistorie"
+    },
+    {
+      "parameters": {
+        "description": "Nutze diesen Agenten um alle Aufgaben im Bereich der terminplanung zu bearbeiten. Hier geht es um das löschen, ändern und anlegen von Terminen zwischen Makler, Suchkunde/Käufer und optional einer Immobilie.",
+        "workflowId": {
+          "__rl": true,
+          "value": "iWmLtay44zpvrYwg",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/iWmLtay44zpvrYwg",
+          "cachedResultName": "Terminplanung"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "query": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('query', ``, 'string') }}",
+            "sessionId": "={{ $json.sessionId }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "query",
+              "displayName": "query",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            },
+            {
+              "id": "sessionId",
+              "displayName": "sessionId",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        752,
+        576
+      ],
+      "id": "040f28ba-26cf-44e9-9f22-780e3ce34163",
+      "name": "Terminplanung"
+    },
+    {
+      "parameters": {
+        "options": {
+          "responseCode": 201
+        }
+      },
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1.5,
+      "position": [
+        752,
+        -48
+      ],
+      "id": "5a6c30c5-96d5-4437-a5aa-793fafd003f9",
+      "name": "Respond to Webhook"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Kundenmanagement": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Immobilienmanagement": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Webhook": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Notizen und Interaktionshistorie": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Terminplanung": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "7c80bd3b-c012-4351-b043-f495875ea788",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8b34504e4bd5854a9d1e0726b3d131547fec992dbd99b1ba3475ebea2df79b06"
+  },
+  "id": "qU4XxxNGG7U2O62V",
+  "tags": []
+}

@@ -1,0 +1,130 @@
+{
+  "name": "Immobilienmanagement",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "query"
+            },
+            {
+              "name": "sessionId"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        352,
+        48
+      ],
+      "id": "018b9481-8177-45ed-962a-b3dcfe1a9ef9",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "Du bist ein sub-Agent, der die Anweisungen des Orchestrierenden Agents ausfüllen soll. Dafür hast du verschiedene Tols zur Verfügung, die auf eine Datenbank zugreifen können. Dein Aufgabenbereich ist das Immobilienmanagement. Du befasst dich nur mit Dateneinträgen, die mit Immobilien zu tun haben.\n\n# Kontext\n\n- Benutze ausschließlich folgende Tabellen \n   - properties: für Immobilien\n\n\n# Wichtige Hinweise\n\n- wandle alle Zahlangaben in integer um. Also 1 Mio. zu 1000000\n- Wenn eine Anfrage nichts mit Immobilienmanagement zu tun hat, weise sie zurück\n- arbeite nur in den dir zugewiesenen Tabellen\n- Frage bei unklaren Anweisungen nach, bevor du Sie ausführst\n- Frage bei nicht optionalen fehlenden Feldern nach\n- MFH steht für Mehrfamilienhaus"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        560,
+        48
+      ],
+      "id": "ffad7dfe-571e-4c8c-bf5f-8c1f8020a9d4",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "o4-mini",
+          "mode": "list",
+          "cachedResultName": "o4-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        560,
+        224
+      ],
+      "id": "da63d3e4-aa99-49be-9c2c-642eca44e2b5",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "YZOe1waidn1SL6WV",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "endpointUrl": "http://0.0.0.0:8000/mcp",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        704,
+        288
+      ],
+      "id": "3cbca4ff-c798-4ac0-821a-4aa3d6b5d80c",
+      "name": "MCP Client"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "08b95f7d-acf7-4ff1-a001-0f1ddafe22d6",
+  "meta": {
+    "instanceId": "8b34504e4bd5854a9d1e0726b3d131547fec992dbd99b1ba3475ebea2df79b06"
+  },
+  "id": "2izJhQaFqHzjJqub",
+  "tags": []
+}

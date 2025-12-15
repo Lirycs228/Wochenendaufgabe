@@ -1,0 +1,7 @@
+[db]
+host=127.0.0.1
+user=db
+password=db12
+database=wochenendaufgabe
+port=3306
+default-character-set = utf8mb4

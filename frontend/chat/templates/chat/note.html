@@ -7,70 +7,6 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
         <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
         <style>
-.search-wrapper {
-    background: linear-gradient(135deg, #00366b 0%, #002447 100%);
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-}
-
-.search-container {
-    background: rgba(255, 255, 255, 0.95);
-    backdrop-filter: blur(10px);
-    border-radius: 20px;
-    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
-    width: 90%;
-    max-width: 800px;
-}
-
-.search-input {
-    border: 2px solid #e2e8f0;
-    border-radius: 12px;
-    padding: 1rem 1.5rem;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-}
-
-.search-input:focus {
-    border-color: #00366b;
-    box-shadow: 0 0 0 3px rgba(0, 36, 71, 0.2);
-}
-
-.search-tags {
-    gap: 0.5rem;
-}
-
-.tag {
-    background: #f3f4f6;
-    border-radius: 20px;
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-    color: #4b5563;
-    transition: all 0.2s ease;
-}
-
-.tag:hover {
-    background: #00366b;
-    color: white;
-    cursor: pointer;
-}
-
-.recent-searches {
-    border-top: 2px solid #f3f4f6;
-}
-
-.recent-item {
-    padding: 0.75rem 1rem;
-    border-radius: 10px;
-    transition: all 0.2s ease;
-}
-
-.recent-item:hover {
-    background: #f3f4f6;
-    cursor: pointer;
-}
 
 :root {
     --sidebar-width: 280px;
@@ -168,6 +104,28 @@ body {
 .nav {
     overflow: hidden;
 }
+
+.card-sleek {
+    background: linear-gradient(135deg, #00366b, #002447);
+    color: #fff;
+    border-radius: 20px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+.card-sleek .card-body {
+    padding: 2rem;
+}
+.card-sleek .card-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+.main-content {
+    margin-left: var(--sidebar-width);
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
         </style>
     </head>
     <body onload="check_login();">
@@ -178,11 +136,11 @@ body {
 
             <div class="p-4">
                 <h4 class="logo-text fw-bold mb-0">VON POLL</h4>
-                <p class="logo-text-small small hide-on-collapse">Anfragen</p>
+                <p class="logo-text-small small hide-on-collapse">Notizen</p>
             </div>
 
             <div class="nav flex-column">
-                <a href="/" class="sidebar-link active text-decoration-none p-3">
+                <a href="/" class="sidebar-link text-decoration-none p-3">
                     <i class="fas fa-home me-3"></i>
                     <span class="hide-on-collapse">Anfragen</span>
                 </a>
@@ -195,7 +153,7 @@ body {
                     <span class="hide-on-collapse">Termine</span>
                 </a>
 
-                <a href="/note" class="sidebar-link text-decoration-none p-3">
+                <a href="/note" class="sidebar-link active text-decoration-none p-3">
                     <i class="fas fa-note-sticky me-3"></i>
                     <span class="hide-on-collapse">Notizen</span>
                 </a>
@@ -208,16 +166,31 @@ body {
 
     
         </nav>
-        <div class="search-wrapper">
-            <div class="search-container">
-                <h4 class="mb-4 text-center">Management Konsole</h4>
-
-                <div class="position-relative mb-4">
-                    <input id="ask-box" type="text" class="form-control search-input" placeholder="Stelle eine Anfrage...">
-                    <i class="bi bi-search position-absolute top-50 end-0 translate-middle-y me-3"></i>
+        <div class="main-content">
+            <div class="card card-sleek">
+                <div class="card-body">
+                    <h5 class="card-title">Notizen</h5>
+                    <table class="table table-bordered table-hover">
+                        <thead class="table-light">
+                            <tr class="sticky-top">
+                            <th>Typ</th>
+                            <th>Inhalt</th>
+                            <th>Vorname</th>
+                            <th>Nachname</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for not in notes %}
+                            <tr>
+                            <td>{{ not.typ }}</td>
+                            <td>{{ not.inhalt }}</td>
+                            <td>{{ not.vorname }}</td>
+                            <td>{{ not.nachname }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                        </table>
                 </div>
-
-                <p id="ask_response"></p>
             </div>
         </div>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js" integrity="sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y" crossorigin="anonymous"></script>
@@ -225,39 +198,6 @@ body {
 function toggle_sidebar() {
     const sidebar = document.querySelector('.sidebar');
     sidebar.classList.toggle('collapsed');
-}
-
-
-var ask_box = document.getElementById("ask-box");
-ask_box.addEventListener("keydown", function (e) {
-    if (e.code === "Enter") {
-        execute_ask(e);
-    }
-});
-
-function execute_ask(e) {
-    var text = e.target.value;
-    const xhr = new XMLHttpRequest();
-    document.getElementById("ask_response").innerHTML = "Anfrage wird bearbeitet";
-    xhr.open("POST", "http://localhost:5678/webhook/fd2f6a34-2a8f-4580-b53f-d24102e01d4f");
-    xhr.setRequestHeader('Content-type', 'application/json');
-    xhr.setRequestHeader('X-Requested-With', 'XMLHttpRequest'); 
-    xhr.setRequestHeader('Access-Control-Allow-Origin', '*');
-    const body = JSON.stringify({
-        query: "Makler: " + getCookie("name") + " \n" + text,
-        sessionId: getCookie("name")
-    });
-    xhr.onload = () => {
-    if (xhr.readyState == 4 && xhr.status == 201) {
-        var json_response = JSON.parse(xhr.responseText)
-        console.log(json_response);
-        document.getElementById("ask_response").innerHTML = json_response["output"]
-    } else {
-        console.log(`Error: ${xhr.status}`);
-    }
-    };
-    xhr.send(body);
-
 }
 function getCookie(name) {
     const value = `; ${document.cookie}`;

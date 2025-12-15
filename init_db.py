@@ -56,7 +56,7 @@ try:
     "Nachname varchar(100) NOT NULL, " \
     "Budget DOUBLE(200, 2), " \
     "SuchkriterienId INT, " \
-    "FOREIGN KEY (SuchkriterienId) REFERENCES criteria(Id)"
+    "FOREIGN KEY (SuchkriterienId) REFERENCES criteria(id)"
     ")")
 except Exception as e:
     print(e)
@@ -70,6 +70,45 @@ try:
     "Geburtsdatum DATE NOT NULL, " \
     "Email VARCHAR(255), " \
     "Telefonnummer VARCHAR(20)"
+    ")")
+except Exception as e:
+    print(e)
+
+try:
+    curr.execute("" \
+    "CREATE TABLE realtor ( " \
+    "id INT AUTO_INCREMENT PRIMARY KEY, " \
+    "Vorname varchar(255) NOT NULL, " \
+    "Nachname varchar(100) NOT NULL"
+    ")")
+except Exception as e:
+    print(e)
+
+try:
+    curr.execute("" \
+    "CREATE TABLE event ( " \
+    "id INT AUTO_INCREMENT PRIMARY KEY, " \
+    "realtorId INT NOT NULL, " \
+    "buyerId INT NOT NULL, " \
+    "propertiesId INT, " \
+    "Inhalt VARCHAR(255) NOT NULL, " \
+    "DatumUhrzeit DATETIME NOT NULL, " \
+    "FOREIGN KEY (realtorId) REFERENCES realtor(id), " \
+    "FOREIGN KEY (buyerId) REFERENCES buyer(id), " \
+    "FOREIGN KEY (propertiesId) REFERENCES properties(id)"
+    ")")
+except Exception as e:
+    print(e)
+
+
+try:
+    curr.execute("" \
+    "CREATE TABLE note ( " \
+    "id INT AUTO_INCREMENT PRIMARY KEY, " \
+    "Typ ENUM('Gespräch', 'Telefonat', 'E-Mail') NOT NULL, " \
+    "buyerId INT NOT NULL, " \
+    "Inhalt VARCHAR(255), " \
+    "Foreign KEY (buyerId) REFERENCES buyer(id)"
     ")")
 except Exception as e:
     print(e)

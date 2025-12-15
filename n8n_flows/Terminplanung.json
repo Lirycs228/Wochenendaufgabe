@@ -1,0 +1,158 @@
+{
+  "name": "Terminplanung",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "query"
+            },
+            {
+              "name": "sessionId"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        496,
+        144
+      ],
+      "id": "e67662ee-b933-49bd-a121-74ff218cbaeb",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $json.query }}",
+        "options": {
+          "systemMessage": "Du bist ein sub-Agent, der die Anweisungen des Orchestrierenden Agents ausfüllen soll. Dafür hast du verschiedene Tols zur Verfügung, die auf eine Datenbank zugreifen können oder Termine erstellen. Dein Aufgabenbereich ist die Terminplanung. Du befasst dich nur mit Anfragen, in denen Termine geplant werden.\n\n# Kontext\n\n- Unterscheide zwischen Eigentümern (Owner) vs. Suchkunden (Buyer)\n- Benutze ausschließlich folgende Tabellen \n   - properties: zum abfragen der ID einer Immobilie\n   - buyer: zum abfragen der IDs von  Suchkunden und Käufern\n   - realtor: zum abfragen der IDs von Maklern\n   - event: zum speichern, ändern und löschen von Terminen\n- Nutze das Datumstool, um das heutige Datum zu ermitteln\n\n\n# Wichtige Hinweise\n\n- Wenn eine Anfrage nichts mit Terminplanung zu tun hat, weise sie zurück\n- arbeite nur in den dir zugewiesenen Tabellen\n- Frage bei unklaren Anweisungen nach, bevor du Sie ausführst\n- Frage bei nicht optionalen fehlenden Feldern nach\n- Die Verknüpfung des Termins mit einer Immobilie ist optional\n- Fasse im Feld Inhalt den Grund des Termins zusammen\n- Im Feld DatumUhrzeit kannst du optional sowohl das Datum, als auch die Uhrzeit eines Termins abspeichern.\n- Setze das Datum auf das heutige Datum, wenn nur eine Uhrzeit angegeben wurde.\n- Setze die Uhrzeit auf 0 Uhr, wenn nur ein Datum angegeben wurde.",
+          "maxIterations": 20
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3,
+      "position": [
+        704,
+        144
+      ],
+      "id": "ad8265fa-2064-422a-8d77-bfc75c64f1a9",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "o4-mini",
+          "mode": "list",
+          "cachedResultName": "o4-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        704,
+        320
+      ],
+      "id": "87cbf49f-1b0d-47eb-b941-97c56148aa58",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "YZOe1waidn1SL6WV",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "endpointUrl": "http://0.0.0.0:8000/mcp",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.mcpClientTool",
+      "typeVersion": 1.2,
+      "position": [
+        944,
+        368
+      ],
+      "id": "1827dc07-3914-4cad-a36c-b0ef2f888859",
+      "name": "MCP Client"
+    },
+    {
+      "parameters": {
+        "includeTime": false,
+        "outputFieldName": "Datum",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dateTimeTool",
+      "typeVersion": 2,
+      "position": [
+        1008,
+        496
+      ],
+      "id": "d5962527-6a67-47f5-9b85-20dc836849e8",
+      "name": "Date & Time"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "MCP Client": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Date & Time": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "e25b4f09-27ff-4ff9-bdd2-fc1153eadb98",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "8b34504e4bd5854a9d1e0726b3d131547fec992dbd99b1ba3475ebea2df79b06"
+  },
+  "id": "iWmLtay44zpvrYwg",
+  "tags": []
+}

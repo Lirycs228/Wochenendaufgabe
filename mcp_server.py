@@ -87,10 +87,12 @@ async def query_sql(ctx: Context, query: str = None) -> str:
             try:
                 cursor.execute(query)
                 if cursor.description:  # Check if the query returns results
+                    print(cursor.description)
                     columns = [column[0] for column in cursor.description]
                     results = []
                     for row in cursor.fetchall():
                         results.append(dict(zip(columns, row)))
+                        print(results)
                     return {"success": True, "results": results, "rowCount": len(results)}
                 else:
                     # For non-SELECT queries (INSERT, UPDATE, etc.)

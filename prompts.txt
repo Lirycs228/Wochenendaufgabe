@@ -1,0 +1,9 @@
+Lege einen Käufer Namens Herbert Hühn ohne Budget an.
+
+Lege eine Immobilie vom Typ Mehrfamilienhaus in der Nebenstraße 31 54321 Frankfurt an, die im Jahr 1760 gebaut wurde und mit 4 Zimmern in einem simplen Zustand ist. Die Wohnfläche beträgt 90 quadratmeter.
+
+Setze die Suchkriterien des Kunden Herr Hühn auf ein Mehrfamilienhaus mit mindestens 2 Zimmer und einen simplen Zustand.
+
+Erstelle einen Besichtigungstermin mit Herrn Hühn für das Objekt in der Nebenstraße 31 am Mittwoch um 11 Uhr.
+
+Notiere, dass ich Herr Hühn eine Mail geschickt habe, in der ich Ihn an den bevorstehenden Termin erinnert habe.
